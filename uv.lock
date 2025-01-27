@@ -138,10 +138,14 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "docling" },
+    { name = "numpy" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "docling", specifier = ">=2.16.0" }]
+requires-dist = [
+    { name = "docling", specifier = ">=2.16.0" },
+    { name = "numpy", specifier = ">=1.26.4" },
+]
 
 [[package]]
 name = "docling"

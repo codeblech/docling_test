@@ -2,6 +2,8 @@ from docling.document_converter import DocumentConverter
 from time import perf_counter
 from datetime import datetime
 import os
+import numpy as np
+from typing import List, Dict
 
 
 def scrape_docling(url: str, output_dir: str = "docling_output") -> tuple[float, str]:
@@ -24,6 +26,26 @@ def scrape_docling(url: str, output_dir: str = "docling_output") -> tuple[float,
     return execution_time, output_file
 
 
+def run_statistical_test(url: str, iterations: int = 5) -> Dict[str, float]:
+    """Run multiple iterations of scraping and calculate statistics."""
+    times = []
+    last_output = ""
+
+    for _ in range(iterations):
+        execution_time, output_file = scrape_docling(url)
+        times.append(execution_time)
+        last_output = output_file
+
+    return {
+        "mean": np.mean(times),
+        "std": np.std(times),
+        "ci_95": 1.96 * np.std(times) / np.sqrt(iterations),  # 95% confidence interval
+        "min": np.min(times),
+        "max": np.max(times),
+        "last_output": last_output,
+    }
+
+
 if __name__ == "__main__":
     test_urls = {
         "Wikipedia (Reference)": "https://en.wikipedia.org/wiki/Formula_One",
@@ -34,17 +56,20 @@ if __name__ == "__main__":
     }
 
     results = []
-    total_time = 0
+    total_mean_time = 0
+    iterations = 5  # Number of iterations per URL
 
     for site_name, url in test_urls.items():
         try:
-            execution_time, output_file = scrape_docling(url)
+            stats = run_statistical_test(url, iterations)
             results.append(
-                {"site": site_name, "time": execution_time, "file": output_file}
+                {"site": site_name, "stats": stats, "file": stats["last_output"]}
             )
-            total_time += execution_time
-            print(f"Scraped {site_name} in {execution_time:.4f} seconds")
-            print(f"Output saved to: {output_file}")
+            total_mean_time += stats["mean"]
+            print(f"Scraped {site_name}:")
+            print(f"  Mean time: {stats['mean']:.4f} ± {stats['ci_95']:.4f} seconds")
+            print(f"  Range: {stats['min']:.4f} - {stats['max']:.4f} seconds")
+            print(f"Output saved to: {stats['last_output']}")
         except Exception as e:
             print(f"Error scraping {site_name}: {str(e)}")
 
@@ -53,15 +78,20 @@ if __name__ == "__main__":
 
     with open(results_file, "w", encoding="utf-8") as f:
         f.write("# Docling Scraping Test Results\n\n")
-        f.write("| Site | Time (seconds) |\n")
-        f.write("|------|---------------|\n")
+        f.write("| Site | Mean Time (s) | 95% CI | Min-Max (s) |\n")
+        f.write("|------|---------------|---------|-------------|\n")
         for result in results:
-            f.write(f"| {result['site']} | {result['time']:.4f} |\n")
-        f.write("|------|---------------|\n")
-        f.write(f"| **Total** | **{total_time:.4f}** |\n\n")
+            stats = result["stats"]
+            f.write(
+                f"| {result['site']} | {stats['mean']:.4f} | ±{stats['ci_95']:.4f} | "
+                f"{stats['min']:.4f}-{stats['max']:.4f} |\n"
+            )
+        f.write("|------|---------------|---------|-------------|\n")
+        f.write(f"| **Total Mean** | **{total_mean_time:.4f}** | | |\n\n")
 
         f.write("## Details\n")
+        f.write(f"Number of iterations per URL: {iterations}\n\n")
         for result in results:
-            f.write(f"* {result['site']}: Output saved to `{result['file']}`\n")
+            f.write(f"* {result['site']}: Final output saved to `{result['file']}`\n")
 
     print(f"\nResults summary saved to: {results_file}")
