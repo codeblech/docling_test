@@ -14,8 +14,8 @@
 Number of iterations per URL: 5
 
 ## URLs
-"Wikipedia (Reference)": "en.wikipedia.org/wiki/Formula_One",
-"JS Rendered": "quotes.toscrape.com/js",
-"Table Layout": "quotes.toscrape.com/tableful",
-"Pagination": "quotes.toscrape.com",
-"Infinite Scroll": "quotes.toscrape.com/scroll",
+"Wikipedia (Reference)": "en.wikipedia.org/wiki/Formula_One" \
+"JS Rendered": "quotes.toscrape.com/js" \
+"Table Layout": "quotes.toscrape.com/tableful" \
+"Pagination": "quotes.toscrape.com" \
+"Infinite Scroll": "quotes.toscrape.com/scroll"
