@@ -1,4 +1,4 @@
-# Docling Scraping Test Results
+## Docling Scraping Test Results
 
 | Site | Mean Time (s) | 95% CI | Min-Max (s) |
 |------|---------------|---------|-------------|
@@ -10,11 +10,12 @@
 |------|---------------|---------|-------------|
 | **Total Mean** | **7.4430** | | |
 
-## Details
+### Details
 Number of iterations per URL: 5
 
-* Wikipedia (Reference): Final output saved to `docling_output/docling_scrape_20250128_005406.md`
-* JS Rendered: Final output saved to `docling_output/docling_scrape_20250128_005415.md`
-* Table Layout: Final output saved to `docling_output/docling_scrape_20250128_005422.md`
-* Pagination: Final output saved to `docling_output/docling_scrape_20250128_005428.md`
-* Infinite Scroll: Final output saved to `docling_output/docling_scrape_20250128_005433.md`
+## URLs
+"Wikipedia (Reference)": "en.wikipedia.org/wiki/Formula_One",
+"JS Rendered": "quotes.toscrape.com/js",
+"Table Layout": "quotes.toscrape.com/tableful",
+"Pagination": "quotes.toscrape.com",
+"Infinite Scroll": "quotes.toscrape.com/scroll",
